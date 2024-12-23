@@ -38,6 +38,12 @@ io.on("connection", (socket) => {
 
     // Emit message:received to all clients, including the sender
     io.emit("message:received", data);
+
+    //  just emit some data to the client
+    io.emit("delivery_status_update", {
+      status: "ongoing",
+      message: "Your delivery status has been updated to: ongoing.",
+    });
   });
 
   socket.on("disconnect", () => {
