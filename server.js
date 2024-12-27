@@ -28,12 +28,14 @@ io.on("connection", (socket) => {
     counter++;
     if (counter >= maxCount) {
       clearInterval(intervalId);
+      console.log("emmited ");
+      console.log(counter);
       io.emit("delivery_status_update", {
         status: "ongoing",
         message: "Your delivery status has been updated to: ongoing.",
       });
     }
-  }, 5000);
+  }, 2000);
 
   // Handle message send event
   socket.on("message:send", (data) => {
