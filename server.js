@@ -21,21 +21,29 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("A user connected");
   //  just emit some data to the client
-  let counter = 0;
-  const maxCount = 10;
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const intervalId = setInterval(() => {
-    counter++;
-    if (counter >= maxCount) {
-      clearInterval(intervalId);
-      console.log("emmited ");
-      console.log(counter);
+  const emitDeliveryState = async (maxCount) => {
+    for (let counter = 0; counter < maxCount; counter++) {
+      console.log(`Counter: ${counter}`);
+
+      // Emit the delivery status update
       io.emit("delivery_status_update", {
         status: "ongoing",
-        message: "Your delivery status has been updated to: ongoing.",
+        message: `Delivery status is ongoing: step ${
+          counter + 1
+        } of ${maxCount}.`,
       });
+
+      // Wait for 2 seconds before the next iteration
+      await delay(2000);
     }
-  }, 2000);
+
+    console.log("Emitted all updates.");
+  };
+
+  // Usage
+  emitDeliveryState(10); // Emits 5 updates with 2 seconds between each
 
   // Handle message send event
   socket.on("message:send", (data) => {
