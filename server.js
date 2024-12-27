@@ -20,6 +20,20 @@ app.get("/", (req, res) => {
 // WebSocket connection handling
 io.on("connection", (socket) => {
   console.log("A user connected");
+  //  just emit some data to the client
+  let counter = 0;
+  const maxCount = 10;
+
+  const intervalId = setInterval(() => {
+    counter++;
+    if (counter >= maxCount) {
+      clearInterval(intervalId);
+      io.emit("delivery_status_update", {
+        status: "ongoing",
+        message: "Your delivery status has been updated to: ongoing.",
+      });
+    }
+  }, 5000);
 
   // Handle message send event
   socket.on("message:send", (data) => {
@@ -38,21 +52,6 @@ io.on("connection", (socket) => {
 
     // Emit message:received to all clients, including the sender
     io.emit("message:received", data);
-
-    //  just emit some data to the client
-    let counter = 0;
-    const maxCount = 10;
-
-    const intervalId = setInterval(() => {
-      counter++;
-      if (counter >= maxCount) {
-        clearInterval(intervalId);
-        io.emit("delivery_status_update", {
-          status: "ongoing",
-          message: "Your delivery status has been updated to: ongoing.",
-        });
-      }
-    }, 5000);
   });
 
   socket.on("disconnect", () => {
