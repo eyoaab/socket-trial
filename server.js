@@ -19,6 +19,10 @@ app.get("/", (req, res) => {
 
 // WebSocket connection handling
 io.on("connection", (socket) => {
+  socket.on("join", ({ userId }) => {
+    socket.join(userId);
+    console.log(`User with ID ${userId} joined room ${userId}`);
+  });
   console.log("A user connected");
   //  just emit some data to the client
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,7 +32,7 @@ io.on("connection", (socket) => {
       console.log(`Counter: ${counter}`);
 
       // Emit the delivery status update
-      io.emit("delivery_status_update", {
+      io.to(userId.toString()).emit("delivery_status_update", {
         status: "ongoing",
         message: `Delivery status is ongoing: step ${
           counter + 1
