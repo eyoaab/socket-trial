@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   });
 });
 
-const user = "";
+let user = "";
 // WebSocket connection handling
 io.on("connection", (socket) => {
   socket.on("join", ({ userId }) => {
