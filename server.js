@@ -17,9 +17,11 @@ app.get("/", (req, res) => {
   });
 });
 
+const user = "";
 // WebSocket connection handling
 io.on("connection", (socket) => {
   socket.on("join", ({ userId }) => {
+    user = userId;
     socket.join(userId);
     console.log(`User with ID ${userId} joined room ${userId}`);
   });
@@ -32,7 +34,7 @@ io.on("connection", (socket) => {
       console.log(`Counter: ${counter}`);
 
       // Emit the delivery status update
-      io.to(userId.toString()).emit("delivery_status_update", {
+      io.to(user.toString()).emit("delivery_status_update", {
         status: "ongoing",
         message: `Delivery status is ongoing: step ${
           counter + 1
